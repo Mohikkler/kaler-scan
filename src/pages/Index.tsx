@@ -66,15 +66,16 @@ const Index = () => {
       <Hero />
       
       {/* Key Services - Simplified */}
-      <section className="py-12 md:py-16 bg-gray-50">
+      <section className="py-16 md:py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-medical-blue mb-3">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-medical-blue mb-4">
               Our Services
             </h2>
-            <p className="text-base md:text-lg text-gray-600">
+            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               Professional diagnostic imaging you can trust
             </p>
+            <div className="w-24 h-1 bg-medical-blue mx-auto mt-4"></div>
           </div>
 
           {/* Featured Services - Large Cards */}
@@ -83,12 +84,14 @@ const Index = () => {
           </div>
 
           {/* Quick Services - Compact Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {quickServices.map(service => 
-              <div key={service.title} className="bg-white rounded-lg p-4 md:p-6 text-center hover:shadow-md transition-shadow border border-gray-100">
-                <service.icon className="w-8 h-8 md:w-10 md:h-10 text-medical-blue mx-auto mb-3" />
-                <h3 className="font-semibold text-sm md:text-base text-medical-blue mb-2">{service.title}</h3>
-                <p className="text-xs md:text-sm text-gray-600 leading-relaxed">{service.description}</p>
+              <div key={service.title} className="bg-white rounded-xl p-6 md:p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 group">
+                <div className="w-16 h-16 bg-medical-blue-light rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-medical-blue group-hover:scale-110 transition-all duration-300">
+                  <service.icon className="w-8 h-8 text-medical-blue group-hover:text-white transition-colors duration-300" />
+                </div>
+                <h3 className="font-semibold text-base md:text-lg text-medical-blue mb-3">{service.title}</h3>
+                <p className="text-sm md:text-base text-gray-600 leading-relaxed">{service.description}</p>
               </div>
             )}
           </div>
@@ -108,73 +111,78 @@ const Index = () => {
       
 
       {/* Why Choose Us - Simple */}
-      <section className="py-12 md:py-16 bg-white">
+      <section className="py-16 md:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-medical-blue mb-3">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-medical-blue mb-4">
               Why Choose Kaler Scan Centre?
             </h2>
+            <div className="w-24 h-1 bg-medical-blue mx-auto"></div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-medical-blue-light rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8 text-medical-blue" />
+          <div className="grid md:grid-cols-3 gap-8 md:gap-10">
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-medical-blue to-medical-blue-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Award className="w-10 h-10 text-white" />
               </div>
-              <h3 className="font-semibold text-lg text-medical-blue mb-2">Expert Care</h3>
-              <p className="text-gray-600">Experienced medical professionals with advanced training</p>
+              <h3 className="font-bold text-xl text-medical-blue mb-3">Expert Care</h3>
+              <p className="text-gray-600 text-lg leading-relaxed">Experienced medical professionals with advanced training</p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-medical-blue-light rounded-full flex items-center justify-center mx-auto mb-4">
-                <Activity className="w-8 h-8 text-medical-blue" />
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-medical-blue to-medical-blue-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Activity className="w-10 h-10 text-white" />
               </div>
-              <h3 className="font-semibold text-lg text-medical-blue mb-2">Advanced Technology</h3>
-              <p className="text-gray-600">State-of-the-art 3D/4D and Color Doppler equipment</p>
+              <h3 className="font-bold text-xl text-medical-blue mb-3">Advanced Technology</h3>
+              <p className="text-gray-600 text-lg leading-relaxed">State-of-the-art 3D/4D and Color Doppler equipment</p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-medical-blue-light rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-medical-blue" />
+            <div className="text-center group">
+              <div className="w-20 h-20 bg-gradient-to-br from-medical-blue to-medical-blue-dark rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Clock className="w-10 h-10 text-white" />
               </div>
-              <h3 className="font-semibold text-lg text-medical-blue mb-2">Convenient Hours</h3>
-              <p className="text-gray-600">Open daily from 9:00 AM to 5:00 PM for your convenience</p>
+              <h3 className="font-bold text-xl text-medical-blue mb-3">Convenient Hours</h3>
+              <p className="text-gray-600 text-lg leading-relaxed">Open daily from 9:00 AM to 5:00 PM for your convenience</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Quick Actions - Simplified */}
-      <section className="py-12 md:py-16 bg-medical-blue-light">
+      <section className="py-16 md:py-20 bg-gradient-to-br from-medical-blue-light to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-medical-blue mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold text-medical-blue mb-4">
             Get Started Today
           </h2>
-          <p className="text-base md:text-lg text-gray-700 mb-8">
+          <p className="text-lg md:text-xl text-gray-700 mb-12 max-w-2xl mx-auto">
             Quick access to appointments and reports
           </p>
           
-          <div className="grid md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
-            <Card className="p-6 md:p-8 hover:shadow-lg transition-shadow">
-              <Calendar className="w-10 h-10 md:w-12 md:h-12 text-medical-blue mx-auto mb-4" />
-              <h3 className="font-semibold text-lg text-medical-blue mb-3">Book Appointment</h3>
-              <p className="text-sm md:text-base text-gray-600 mb-6">
-                Schedule your test online
+          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            <Card className="p-8 md:p-10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 shadow-lg bg-white">
+              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-blue-dark rounded-full flex items-center justify-center mx-auto mb-6">
+                <Calendar className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-bold text-xl text-medical-blue mb-4">Book Appointment</h3>
+              <p className="text-base text-gray-600 mb-8 leading-relaxed">
+                Schedule your test online and get instant confirmation
               </p>
-              <Button variant="medical" className="w-full min-h-[44px]" asChild>
+              <Button variant="medical" className="w-full min-h-[52px] text-lg font-semibold hover:scale-105 transition-transform duration-300" asChild>
                 <Link to="/appointments">
                   Book Now
                 </Link>
               </Button>
             </Card>
 
-            <Card className="p-6 md:p-8 hover:shadow-lg transition-shadow">
-              <FileText className="w-10 h-10 md:w-12 md:h-12 text-medical-blue mx-auto mb-4" />
-              <h3 className="font-semibold text-lg text-medical-blue mb-3">Check Reports</h3>
-              <p className="text-sm md:text-base text-gray-600 mb-6">
-                Access your results securely
+            <Card className="p-8 md:p-10 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 shadow-lg bg-white">
+              <div className="w-16 h-16 bg-gradient-to-br from-medical-blue to-medical-blue-dark rounded-full flex items-center justify-center mx-auto mb-6">
+                <FileText className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-bold text-xl text-medical-blue mb-4">Check Reports</h3>
+              <p className="text-base text-gray-600 mb-8 leading-relaxed">
+                Access your results securely anytime, anywhere
               </p>
-              <Button variant="medical-outline" className="w-full min-h-[44px]" asChild>
+              <Button variant="medical-outline" className="w-full min-h-[52px] text-lg font-semibold hover:scale-105 transition-transform duration-300" asChild>
                 <Link to="/reports">
                   View Reports
                 </Link>

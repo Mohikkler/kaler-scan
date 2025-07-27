@@ -5,15 +5,16 @@ import heroImage from "@/assets/hero-medical.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[500px] md:min-h-[600px] bg-gradient-to-br from-medical-blue via-medical-blue-dark to-medical-blue flex items-center">
+    <section className="relative min-h-[600px] md:min-h-[700px] bg-gradient-to-br from-medical-blue via-medical-blue-dark to-medical-blue flex items-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
           src={heroImage} 
           alt="Kaler Scan Centre - Advanced Diagnostic Center"
-          className="w-full h-full object-cover opacity-15"
+          className="w-full h-full object-cover opacity-20 transform scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-medical-blue/95 to-medical-blue-dark/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/90 via-medical-blue-dark/85 to-medical-blue/95"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
@@ -31,13 +32,13 @@ const Hero = () => {
           
           {/* Primary Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 max-w-md mx-auto">
-            <Button size="lg" className="bg-white text-medical-blue hover:bg-blue-50 shadow-lg text-base py-3 min-h-[48px]" asChild>
+            <Button size="lg" className="bg-white text-medical-blue hover:bg-white/90 hover:scale-105 shadow-xl text-base py-3 min-h-[48px] transition-all duration-300 font-semibold" asChild>
               <Link to="/appointments">
                 <Calendar className="w-5 h-5" />
                 Book Appointment
               </Link>
             </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-medical-blue text-base py-3 min-h-[48px]" asChild>
+            <Button variant="outline" size="lg" className="border-white/80 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-medical-blue text-base py-3 min-h-[48px] transition-all duration-300" asChild>
               <Link to="/reports">
                 <FileText className="w-5 h-5" />
                 Check Reports
