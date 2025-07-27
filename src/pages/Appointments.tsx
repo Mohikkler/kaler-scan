@@ -1,0 +1,279 @@
+import Navigation from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar, Clock, User, Phone, FileText } from "lucide-react";
+import { useState } from "react";
+
+const Appointments = () => {
+  const [selectedService, setSelectedService] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+
+  const services = [
+    "3D/4D Ultrasound Scanning",
+    "Color Doppler Testing",
+    "Digital X-Ray",
+    "Ultrasound Scanning",
+    "TVS Scan",
+    "Sono Salpingography",
+    "Hystero Salpingography",
+    "Level-2 Scan",
+    "Ovulation Study",
+    "Breast/Testis/Thyroid Scanning",
+    "Computerized ECG",
+    "General Consultation with Dr. Kuldip Kaler"
+  ];
+
+  const timeSlots = [
+    "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+    "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM",
+    "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation />
+      
+      {/* Header Section */}
+      <section className="bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Book Your Appointment</h1>
+            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+              Schedule your diagnostic test with our expert medical team
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Appointment Form */}
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Form */}
+            <div className="lg:col-span-2">
+              <Card className="shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-3 text-medical-blue">
+                    <Calendar className="w-6 h-6" />
+                    <span>Appointment Details</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form className="space-y-6">
+                    {/* Service Selection */}
+                    <div>
+                      <Label htmlFor="service" className="text-base font-medium">Select Service</Label>
+                      <Select value={selectedService} onValueChange={setSelectedService}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose the diagnostic service you need" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {services.map((service) => (
+                            <SelectItem key={service} value={service}>
+                              {service}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Patient Information */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="firstName">First Name *</Label>
+                        <Input id="firstName" placeholder="Enter your first name" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="lastName">Last Name *</Label>
+                        <Input id="lastName" placeholder="Enter your last name" required />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="phone">Phone Number *</Label>
+                        <Input id="phone" type="tel" placeholder="+91 XXXXX XXXXX" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input id="email" type="email" placeholder="your.email@example.com" />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="age">Age *</Label>
+                        <Input id="age" type="number" placeholder="Age" min="1" max="120" required />
+                      </div>
+                      <div>
+                        <Label htmlFor="gender">Gender</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="emergencyContact">Emergency Contact</Label>
+                        <Input id="emergencyContact" type="tel" placeholder="Emergency number" />
+                      </div>
+                    </div>
+
+                    {/* Date and Time Selection */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="date">Preferred Date *</Label>
+                        <Input 
+                          id="date" 
+                          type="date" 
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          required 
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="time">Preferred Time *</Label>
+                        <Select value={selectedTime} onValueChange={setSelectedTime}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select time slot" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {timeSlots.map((time) => (
+                              <SelectItem key={time} value={time}>
+                                {time}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {/* Additional Information */}
+                    <div>
+                      <Label htmlFor="notes">Additional Information</Label>
+                      <Textarea 
+                        id="notes" 
+                        placeholder="Any specific requirements, medical history, or notes for the doctor..."
+                        className="min-h-[100px]"
+                      />
+                    </div>
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <p className="text-sm text-gray-600">
+                        <strong>Note:</strong> All appointments are subject to availability. 
+                        You will receive a confirmation call within 2-4 hours of booking. 
+                        Please arrive 15 minutes before your scheduled time.
+                      </p>
+                    </div>
+
+                    <Button type="submit" variant="medical" size="lg" className="w-full">
+                      <Calendar className="w-5 h-5" />
+                      Confirm Appointment
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Sidebar Information */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-medical-blue">
+                    <Clock className="w-5 h-5" />
+                    <span>Operating Hours</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <p className="text-gray-700"><strong>Monday - Sunday</strong></p>
+                    <p className="text-2xl font-bold text-medical-blue">9:00 AM - 5:00 PM</p>
+                    <p className="text-sm text-gray-500">Appointments available during operating hours</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-medical-blue">
+                    <User className="w-5 h-5" />
+                    <span>What to Bring</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    <li>• Valid photo ID (Aadhaar, PAN, etc.)</li>
+                    <li>• Previous medical reports (if any)</li>
+                    <li>• Doctor's prescription/referral</li>
+                    <li>• Insurance card (if applicable)</li>
+                    <li>• Comfortable clothing for examination</li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-medical-blue">
+                    <Phone className="w-5 h-5" />
+                    <span>Need Help?</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-600">
+                      Call us if you need assistance with booking or have any questions
+                    </p>
+                    <div className="space-y-2">
+                      <p className="text-sm">
+                        <strong>Sarabjeet Singh:</strong><br />
+                        <a href="tel:+919779386009" className="text-medical-blue hover:underline">
+                          +91 97793-86009
+                        </a>
+                      </p>
+                      <p className="text-sm">
+                        <strong>Harpreet Singh:</strong><br />
+                        <a href="tel:+919876759939" className="text-medical-blue hover:underline">
+                          +91 98767-59939
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-medical-blue">
+                    <FileText className="w-5 h-5" />
+                    <span>Pricing Information</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Competitive pricing for all diagnostic services. Contact us for detailed pricing.
+                  </p>
+                  <p className="text-lg font-medium text-medical-blue">
+                    Prices available on inquiry basis
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Appointments;
