@@ -3,81 +3,65 @@ import Hero from "@/components/Hero";
 import ServiceCard from "@/components/ServiceCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Heart, 
-  Baby, 
-  Stethoscope, 
-  Eye, 
-  Activity, 
-  Scan,
-  Calendar,
-  FileText,
-  ArrowRight,
-  Star,
-  Users,
-  Clock,
-  Award
-} from "lucide-react";
+import { Heart, Baby, Stethoscope, Eye, Activity, Scan, Calendar, FileText, ArrowRight, Star, Users, Clock, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import ultrasoundImage from "@/assets/ultrasound-3d.jpg";
 import colorDopplerImage from "@/assets/color-doppler.jpg";
-
 const Index = () => {
-  const featuredServices = [
-    {
-      title: "3D/4D Ultrasound Scanning",
-      description: "Advanced three-dimensional and real-time imaging for detailed fetal development monitoring and anatomical assessment with lifelike visualization.",
-      icon: Baby,
-      featured: true,
-      image: ultrasoundImage,
-      href: "/services/3d-4d-ultrasound"
-    },
-    {
-      title: "Color Doppler Testing",
-      description: "State-of-the-art blood flow visualization using color-coded imaging to detect vascular abnormalities and circulation issues.",
-      icon: Heart,
-      featured: true,
-      image: colorDopplerImage,
-      href: "/services/color-doppler"
-    }
-  ];
-
-  const quickServices = [
-    {
-      title: "Digital X-Ray",
-      description: "High-resolution digital radiography with reduced radiation exposure.",
-      icon: Scan,
-      href: "/services/digital-xray"
-    },
-    {
-      title: "Ultrasound Scanning",
-      description: "Comprehensive abdominal, pelvic, and general diagnostic imaging.",
-      icon: Eye,
-      href: "/services/ultrasound"
-    },
-    {
-      title: "TVS Scan",
-      description: "Transvaginal sonography for detailed gynecological assessment.",
-      icon: Activity,
-      href: "/services/tvs-scan"
-    },
-    {
-      title: "ECG Testing",
-      description: "Computerized electrocardiogram for cardiac function analysis.",
-      icon: Stethoscope,
-      href: "/services/ecg"
-    }
-  ];
-
-  const stats = [
-    { icon: Users, number: "10,000+", label: "Patients Served" },
-    { icon: Star, number: "98%", label: "Patient Satisfaction" },
-    { icon: Clock, number: "15+", label: "Years Experience" },
-    { icon: Award, number: "50+", label: "Tests Daily" }
-  ];
-
-  return (
-    <div className="min-h-screen bg-white">
+  const featuredServices = [{
+    title: "3D/4D Ultrasound Scanning",
+    description: "Advanced three-dimensional and real-time imaging for detailed fetal development monitoring and anatomical assessment with lifelike visualization.",
+    icon: Baby,
+    featured: true,
+    image: ultrasoundImage,
+    href: "/services/3d-4d-ultrasound"
+  }, {
+    title: "Color Doppler Testing",
+    description: "State-of-the-art blood flow visualization using color-coded imaging to detect vascular abnormalities and circulation issues.",
+    icon: Heart,
+    featured: true,
+    image: colorDopplerImage,
+    href: "/services/color-doppler"
+  }];
+  const quickServices = [{
+    title: "Digital X-Ray",
+    description: "High-resolution digital radiography with reduced radiation exposure.",
+    icon: Scan,
+    href: "/services/digital-xray"
+  }, {
+    title: "Ultrasound Scanning",
+    description: "Comprehensive abdominal, pelvic, and general diagnostic imaging.",
+    icon: Eye,
+    href: "/services/ultrasound"
+  }, {
+    title: "TVS Scan",
+    description: "Transvaginal sonography for detailed gynecological assessment.",
+    icon: Activity,
+    href: "/services/tvs-scan"
+  }, {
+    title: "ECG Testing",
+    description: "Computerized electrocardiogram for cardiac function analysis.",
+    icon: Stethoscope,
+    href: "/services/ecg"
+  }];
+  const stats = [{
+    icon: Users,
+    number: "10,000+",
+    label: "Patients Served"
+  }, {
+    icon: Star,
+    number: "98%",
+    label: "Patient Satisfaction"
+  }, {
+    icon: Clock,
+    number: "15+",
+    label: "Years Experience"
+  }, {
+    icon: Award,
+    number: "50+",
+    label: "Tests Daily"
+  }];
+  return <div className="min-h-screen bg-white">
       <Navigation />
       <Hero />
       
@@ -94,17 +78,7 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {featuredServices.map((service) => (
-              <ServiceCard
-                key={service.title}
-                title={service.title}
-                description={service.description}
-                icon={service.icon}
-                href={service.href}
-                featured={service.featured}
-                image={service.image}
-              />
-            ))}
+            {featuredServices.map(service => <ServiceCard key={service.title} title={service.title} description={service.description} icon={service.icon} href={service.href} featured={service.featured} image={service.image} />)}
           </div>
         </div>
       </section>
@@ -122,15 +96,7 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {quickServices.map((service) => (
-              <ServiceCard
-                key={service.title}
-                title={service.title}
-                description={service.description}
-                icon={service.icon}
-                href={service.href}
-              />
-            ))}
+            {quickServices.map(service => <ServiceCard key={service.title} title={service.title} description={service.description} icon={service.icon} href={service.href} />)}
           </div>
 
           <div className="text-center mt-12">
@@ -145,26 +111,7 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Trusted by Thousands</h2>
-            <p className="text-xl text-blue-100">Our commitment to excellence speaks for itself</p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="w-8 h-8 text-blue-200" />
-                </div>
-                <div className="text-3xl md:text-4xl font-bold mb-2">{stat.number}</div>
-                <div className="text-blue-100">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* CTA Section */}
       <section className="py-16 bg-medical-blue-light">
@@ -213,8 +160,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
