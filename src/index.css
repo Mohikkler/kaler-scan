@@ -36,10 +36,11 @@ All colors MUST be HSL.
     --input: 214 32% 91%;
     --ring: 217 91% 60%;
 
-    /* Medical theme colors */
+    /* Medical theme colors - Matching brochure design */
     --medical-blue: 217 91% 60%;
     --medical-blue-light: 214 95% 93%;
     --medical-blue-dark: 217 91% 45%;
+    --medical-red: 0 84% 55%;
     --medical-success: 142 76% 36%;
     --medical-warning: 38 92% 50%;
     
