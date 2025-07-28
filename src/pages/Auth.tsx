@@ -6,10 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useAuth } from '@/hooks/useAuth';
-import { Phone, Shield, ArrowLeft } from 'lucide-react';
+import { Phone, Shield, ArrowLeft, Send } from 'lucide-react';
 
 export default function Auth() {
   const [phone, setPhone] = useState('');
+  const [telegramUsername, setTelegramUsername] = useState('');
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [loading, setLoading] = useState(false);
@@ -18,10 +19,10 @@ export default function Auth() {
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim()) return;
+    if (!phone.trim() || !telegramUsername.trim()) return;
 
     setLoading(true);
-    const { error } = await phoneLogin(phone);
+    const { error } = await phoneLogin(phone, telegramUsername);
     setLoading(false);
 
     if (!error) {
@@ -45,6 +46,7 @@ export default function Auth() {
   const resetForm = () => {
     setStep('phone');
     setPhone('');
+    setTelegramUsername('');
     setOtp('');
   };
 
@@ -57,41 +59,56 @@ export default function Auth() {
           </div>
           <CardTitle className="text-2xl">Patient Login</CardTitle>
           <CardDescription>
-            Access your test reports securely with your phone number
+            Access your test reports securely with Telegram authentication
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {step === 'phone' ? (
             <form onSubmit={handleSendOtp} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+91 98765 43210"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  We'll send you an OTP to verify your identity
-                </p>
-              </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Sending OTP...' : 'Send OTP'}
-              </Button>
+               <div className="space-y-2">
+                 <Label htmlFor="phone">Phone Number</Label>
+                 <div className="relative">
+                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                   <Input
+                     id="phone"
+                     type="tel"
+                     placeholder="+91 98765 43210"
+                     value={phone}
+                     onChange={(e) => setPhone(e.target.value)}
+                     className="pl-10"
+                     required
+                   />
+                 </div>
+               </div>
+               <div className="space-y-2">
+                 <Label htmlFor="telegram">Telegram Username</Label>
+                 <div className="relative">
+                   <Send className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                   <Input
+                     id="telegram"
+                     type="text"
+                     placeholder="@your_username"
+                     value={telegramUsername}
+                     onChange={(e) => setTelegramUsername(e.target.value)}
+                     className="pl-10"
+                     required
+                   />
+                 </div>
+                 <p className="text-sm text-muted-foreground">
+                   We'll send your OTP to this Telegram username - completely free!
+                 </p>
+               </div>
+               <Button type="submit" className="w-full" disabled={loading || !phone.trim() || !telegramUsername.trim()}>
+                 {loading ? 'Sending OTP...' : 'Send OTP via Telegram'}
+               </Button>
             </form>
           ) : (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div className="space-y-2">
                 <Label>Enter OTP</Label>
-                <p className="text-sm text-muted-foreground">
-                  Enter the 6-digit code sent to {phone}
-                </p>
+                 <p className="text-sm text-muted-foreground">
+                   Enter the 6-digit code sent to @{telegramUsername} on Telegram
+                 </p>
                 <div className="flex justify-center">
                   <InputOTP maxLength={6} value={otp} onChange={setOtp}>
                     <InputOTPGroup>

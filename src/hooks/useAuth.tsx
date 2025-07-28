@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  phoneLogin: (phone: string) => Promise<{ error: string | null }>;
+  phoneLogin: (phone: string, telegramUsername: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, otp: string) => Promise<{ error: string | null }>;
   isAdmin: boolean;
 }
@@ -54,18 +54,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const phoneLogin = async (phone: string) => {
+  const phoneLogin = async (phone: string, telegramUsername: string) => {
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        phone: phone,
-        options: {
-          channel: 'sms'
+      const response = await supabase.functions.invoke('telegram-bot', {
+        body: {
+          action: 'send_otp',
+          phone: phone,
+          telegramUsername: telegramUsername
         }
       });
-      
-      if (error) throw error;
-      
-      toast.success('OTP sent to your phone');
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      const { data } = response;
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to send OTP');
+      }
+
+      // Show demo message for development
+      if (data.demo_message) {
+        toast.info(data.demo_message);
+      } else {
+        toast.success('OTP sent to your Telegram');
+      }
+
       return { error: null };
     } catch (error: any) {
       const errorMessage = error.message || 'Failed to send OTP';
@@ -76,14 +90,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyOtp = async (phone: string, otp: string) => {
     try {
-      const { error } = await supabase.auth.verifyOtp({
-        phone: phone,
-        token: otp,
-        type: 'sms'
+      const response = await supabase.functions.invoke('telegram-bot', {
+        body: {
+          action: 'verify_otp',
+          phone: phone,
+          otp: otp
+        }
       });
-      
-      if (error) throw error;
-      
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      const { data } = response;
+      if (!data.success) {
+        throw new Error(data.error || 'Invalid OTP');
+      }
+
       // Store phone in local storage for RLS policies
       localStorage.setItem('current_phone', phone);
       
