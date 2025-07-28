@@ -98,6 +98,8 @@ export type Database = {
           gender: string | null
           id: string
           phone_number: string
+          telegram_chat_id: number | null
+          telegram_username: string | null
           updated_at: string
         }
         Insert: {
@@ -109,6 +111,8 @@ export type Database = {
           gender?: string | null
           id?: string
           phone_number: string
+          telegram_chat_id?: number | null
+          telegram_username?: string | null
           updated_at?: string
         }
         Update: {
@@ -120,6 +124,8 @@ export type Database = {
           gender?: string | null
           id?: string
           phone_number?: string
+          telegram_chat_id?: number | null
+          telegram_username?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -180,6 +186,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      telegram_otp_codes: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          otp_code: string
+          phone_number: string
+          telegram_username: string
+          used: boolean
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          otp_code: string
+          phone_number: string
+          telegram_username: string
+          used?: boolean
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          otp_code?: string
+          phone_number?: string
+          telegram_username?: string
+          used?: boolean
+        }
+        Relationships: []
       }
     }
     Views: {
