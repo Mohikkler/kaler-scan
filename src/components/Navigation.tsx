@@ -57,9 +57,9 @@ const Navigation = () => {
               </Link>
             </Button>
             <Button variant="medical" size="sm" asChild>
-              <Link to="/reports">
+              <Link to="/auth">
                 <FileText className="w-4 h-4" />
-                Check Reports
+                Patient Login
               </Link>
             </Button>
           </div>
@@ -102,9 +102,9 @@ const Navigation = () => {
                   </Link>
                 </Button>
                 <Button variant="medical" size="sm" className="w-full" asChild>
-                  <Link to="/reports">
+                  <Link to="/auth">
                     <FileText className="w-4 h-4" />
-                    Check Reports
+                    Patient Login
                   </Link>
                 </Button>
               </div>

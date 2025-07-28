@@ -183,8 +183,8 @@ const Index = () => {
                 Access your results securely anytime, anywhere
               </p>
               <Button variant="medical-outline" className="w-full min-h-[52px] text-lg font-semibold hover:scale-105 transition-transform duration-300" asChild>
-                <Link to="/reports">
-                  View Reports
+                <Link to="/auth">
+                  Patient Login
                 </Link>
               </Button>
             </Card>
