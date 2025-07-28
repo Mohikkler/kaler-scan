@@ -130,21 +130,26 @@ serve(async (req) => {
       try {
         // First, try to find if user has a stored chat_id by telegram username
         const cleanUsername = telegramUsername.replace('@', '');
+        console.log(`Looking for user with telegram username: ${cleanUsername}`);
+        
         const { data: patientData } = await supabase
           .from('patients')
-          .select('telegram_chat_id')
+          .select('telegram_chat_id, telegram_username')
           .eq('telegram_username', cleanUsername)
           .maybeSingle();
 
+        console.log(`Found patient data:`, patientData);
         let chatId = patientData?.telegram_chat_id;
 
         if (!chatId) {
+          console.log(`No chat_id found for ${cleanUsername}. User needs to start conversation with bot.`);
           // If no stored chat_id, we can't send the message directly
           // User needs to start a conversation with the bot first
           return new Response(JSON.stringify({ 
             success: false, 
-            error: 'Please start a conversation with @kalerscanbot on Telegram first, then try again.',
-            requiresBotStart: true
+            error: `Please message @kalerscanbot on Telegram first by sending "/start", then try again. We found your username but no active chat session.`,
+            requiresBotStart: true,
+            debug: { hasUser: !!patientData, chatId: chatId }
           }), {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
