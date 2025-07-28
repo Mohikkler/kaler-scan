@@ -19,13 +19,9 @@ const Hero = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div className="text-center text-white">
-          {/* Main Heading - Matching brochure style */}
+          {/* Main Heading */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-            <span className="text-white">Kaler</span>
-            <br />
-            <span className="text-medical-red font-extrabold tracking-wider">SCAN CENTRE</span>
-            <br />
-            <span className="text-medical-red font-extrabold text-2xl md:text-4xl lg:text-5xl tracking-wider">& DIGITAL X-RAY</span>
+            KALER SCAN CENTRE
           </h1>
           <p className="text-lg md:text-xl mb-2 text-blue-100">
             Advanced Diagnostic Imaging Services
