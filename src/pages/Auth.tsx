@@ -94,9 +94,9 @@ export default function Auth() {
                      required
                    />
                  </div>
-                 <p className="text-sm text-muted-foreground">
-                   We'll send your OTP to this Telegram username - completely free!
-                 </p>
+                  <p className="text-sm text-muted-foreground">
+                    First, start a conversation with @kalerscanbot on Telegram, then enter your username here. We'll send your OTP completely free!
+                  </p>
                </div>
                <Button type="submit" className="w-full" disabled={loading || !phone.trim() || !telegramUsername.trim()}>
                  {loading ? 'Sending OTP...' : 'Send OTP via Telegram'}

@@ -49,7 +49,51 @@ serve(async (req) => {
   }
 
   try {
-    const { action, phone, telegramUsername, otp } = await req.json();
+    const body = await req.json();
+    
+    // Handle Telegram webhook (when users message the bot)
+    if (body.message) {
+      const chatId = body.message.chat.id;
+      const username = body.message.from.username;
+      const text = body.message.text;
+
+      console.log(`Received message from @${username} (${chatId}): ${text}`);
+
+      // Store or update the user's chat_id
+      if (username) {
+        const { error } = await supabase
+          .from('patients')
+          .upsert({
+            telegram_username: username,
+            telegram_chat_id: chatId,
+            phone_number: `temp_${username}`, // Temporary until they login properly
+            full_name: `User ${username}`
+          }, {
+            onConflict: 'telegram_username',
+            ignoreDuplicates: false
+          });
+
+        if (error) {
+          console.error('Error storing chat_id:', error);
+        }
+
+        // Send welcome message
+        if (text === '/start') {
+          await sendTelegramMessage(chatId.toString(), 
+            '🏥 <b>Welcome to Kalera Diagnostics!</b>\n\n' +
+            'Your Telegram account is now connected. You can now receive OTP codes for secure login to access your test reports.\n\n' +
+            'Go back to the website and enter your phone number and Telegram username to get started!'
+          );
+        }
+      }
+
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Handle OTP actions
+    const { action, phone, telegramUsername, otp } = body;
     console.log(`Received action: ${action}, phone: ${phone}, telegram: ${telegramUsername}`);
 
     if (action === 'send_otp') {
@@ -82,17 +126,51 @@ serve(async (req) => {
                     `📱 Phone: ${phone}\n\n` +
                     `Please enter this code in the web application to complete your login.`;
 
-      // For demonstration, we'll return the OTP in the response
-      // In production, this would only be sent via Telegram
-      return new Response(JSON.stringify({ 
-        success: true, 
-        message: 'OTP sent to Telegram',
-        // Remove this in production - for demo only
-        demo_otp: otpCode,
-        demo_message: `Demo: Your OTP is ${otpCode}. In production, this would be sent to @${telegramUsername} on Telegram.`
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      // Try to get user's chat by username via Telegram API
+      try {
+        // First, try to find if user has a stored chat_id by telegram username
+        const cleanUsername = telegramUsername.replace('@', '');
+        const { data: patientData } = await supabase
+          .from('patients')
+          .select('telegram_chat_id')
+          .eq('telegram_username', cleanUsername)
+          .maybeSingle();
+
+        let chatId = patientData?.telegram_chat_id;
+
+        if (!chatId) {
+          // If no stored chat_id, we can't send the message directly
+          // User needs to start a conversation with the bot first
+          return new Response(JSON.stringify({ 
+            success: false, 
+            error: 'Please start a conversation with @kalerscanbot on Telegram first, then try again.',
+            requiresBotStart: true
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        // Send OTP via Telegram
+        await sendTelegramMessage(chatId.toString(), message);
+
+        return new Response(JSON.stringify({ 
+          success: true, 
+          message: 'OTP sent to your Telegram account'
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+
+      } catch (telegramError) {
+        console.error('Error sending Telegram message:', telegramError);
+        return new Response(JSON.stringify({ 
+          success: false, 
+          error: 'Failed to send OTP via Telegram. Please ensure you have started a conversation with @kalerscanbot first.'
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
 
     } else if (action === 'verify_otp') {
       console.log(`Verifying OTP: ${otp} for phone: ${phone}`);
