@@ -88,44 +88,68 @@ export type Database = {
           },
         ]
       }
+      email_otp_codes: {
+        Row: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          otp_code: string
+          phone_number: string
+          used: boolean
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          otp_code: string
+          phone_number: string
+          used?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          otp_code?: string
+          phone_number?: string
+          used?: boolean
+        }
+        Relationships: []
+      }
       patients: {
         Row: {
           age: number | null
           created_at: string
-          email: string | null
+          email: string
           emergency_contact: string | null
           full_name: string
           gender: string | null
           id: string
           phone_number: string
-          telegram_chat_id: number | null
-          telegram_username: string | null
           updated_at: string
         }
         Insert: {
           age?: number | null
           created_at?: string
-          email?: string | null
+          email: string
           emergency_contact?: string | null
           full_name: string
           gender?: string | null
           id?: string
           phone_number: string
-          telegram_chat_id?: number | null
-          telegram_username?: string | null
           updated_at?: string
         }
         Update: {
           age?: number | null
           created_at?: string
-          email?: string | null
+          email?: string
           emergency_contact?: string | null
           full_name?: string
           gender?: string | null
           id?: string
           phone_number?: string
-          telegram_chat_id?: number | null
-          telegram_username?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -186,36 +210,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      telegram_otp_codes: {
-        Row: {
-          created_at: string
-          expires_at: string
-          id: string
-          otp_code: string
-          phone_number: string
-          telegram_username: string
-          used: boolean
-        }
-        Insert: {
-          created_at?: string
-          expires_at?: string
-          id?: string
-          otp_code: string
-          phone_number: string
-          telegram_username: string
-          used?: boolean
-        }
-        Update: {
-          created_at?: string
-          expires_at?: string
-          id?: string
-          otp_code?: string
-          phone_number?: string
-          telegram_username?: string
-          used?: boolean
-        }
-        Relationships: []
       }
     }
     Views: {
