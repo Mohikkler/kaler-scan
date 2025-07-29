@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,8 +14,15 @@ export default function Auth() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [loading, setLoading] = useState(false);
-  const { emailLogin, verifyOtp } = useAuth();
+  const { emailLogin, verifyOtp, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isLoggedIn()) {
+      navigate('/reports');
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     console.log('HandleSendOtp called');

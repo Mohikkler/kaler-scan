@@ -11,6 +11,7 @@ interface AuthContextType {
   emailLogin: (phone: string, email: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, otp: string) => Promise<{ error: string | null }>;
   isAdmin: boolean;
+  isLoggedIn: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +54,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // Check if user is logged in based on phone number in localStorage
+  const isLoggedIn = () => {
+    return localStorage.getItem('current_phone') !== null;
+  };
 
   const emailLogin = async (phone: string, email: string) => {
     console.log('EmailLogin called with:', phone, email);
@@ -134,7 +140,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       emailLogin,
       verifyOtp,
-      isAdmin
+      isAdmin,
+      isLoggedIn
     }}>
       {children}
     </AuthContext.Provider>
