@@ -6,23 +6,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useAuth } from '@/hooks/useAuth';
-import { Phone, Shield, ArrowLeft, Send } from 'lucide-react';
+import { Phone, Shield, ArrowLeft, Mail } from 'lucide-react';
 
 export default function Auth() {
   const [phone, setPhone] = useState('');
-  const [telegramUsername, setTelegramUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [loading, setLoading] = useState(false);
-  const { phoneLogin, verifyOtp } = useAuth();
+  const { emailLogin, verifyOtp } = useAuth();
   const navigate = useNavigate();
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim() || !telegramUsername.trim()) return;
+    if (!phone.trim() || !email.trim()) return;
 
     setLoading(true);
-    const { error } = await phoneLogin(phone, telegramUsername);
+    const { error } = await emailLogin(phone, email);
     setLoading(false);
 
     if (!error) {
@@ -46,7 +46,7 @@ export default function Auth() {
   const resetForm = () => {
     setStep('phone');
     setPhone('');
-    setTelegramUsername('');
+    setEmail('');
     setOtp('');
   };
 
@@ -59,7 +59,7 @@ export default function Auth() {
           </div>
           <CardTitle className="text-2xl">Patient Login</CardTitle>
           <CardDescription>
-            Access your test reports securely with Telegram authentication
+            Access your test reports securely with email authentication
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -80,34 +80,34 @@ export default function Auth() {
                    />
                  </div>
                </div>
-               <div className="space-y-2">
-                 <Label htmlFor="telegram">Telegram Username</Label>
-                 <div className="relative">
-                   <Send className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                   <Input
-                     id="telegram"
-                     type="text"
-                     placeholder="@your_username"
-                     value={telegramUsername}
-                     onChange={(e) => setTelegramUsername(e.target.value)}
-                     className="pl-10"
-                     required
-                   />
-                 </div>
-                  <p className="text-sm text-muted-foreground">
-                    First, start a conversation with @kalerscanbot on Telegram, then enter your username here. We'll send your OTP completely free!
-                  </p>
-               </div>
-               <Button type="submit" className="w-full" disabled={loading || !phone.trim() || !telegramUsername.trim()}>
-                 {loading ? 'Sending OTP...' : 'Send OTP via Telegram'}
-               </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your.email@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                   <p className="text-sm text-muted-foreground">
+                     We'll send your OTP to this email address for secure verification.
+                   </p>
+                </div>
+                <Button type="submit" className="w-full" disabled={loading || !phone.trim() || !email.trim()}>
+                  {loading ? 'Sending OTP...' : 'Send OTP via Email'}
+                </Button>
             </form>
           ) : (
             <form onSubmit={handleVerifyOtp} className="space-y-4">
               <div className="space-y-2">
                 <Label>Enter OTP</Label>
                  <p className="text-sm text-muted-foreground">
-                   Enter the 6-digit code sent to @{telegramUsername} on Telegram
+                   Enter the 6-digit code sent to {email}
                  </p>
                 <div className="flex justify-center">
                   <InputOTP maxLength={6} value={otp} onChange={setOtp}>

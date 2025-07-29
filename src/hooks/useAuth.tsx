@@ -8,7 +8,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  phoneLogin: (phone: string, telegramUsername: string) => Promise<{ error: string | null }>;
+  emailLogin: (phone: string, email: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, otp: string) => Promise<{ error: string | null }>;
   isAdmin: boolean;
 }
@@ -54,13 +54,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const phoneLogin = async (phone: string, telegramUsername: string) => {
+  const emailLogin = async (phone: string, email: string) => {
     try {
-      const response = await supabase.functions.invoke('telegram-bot', {
+      const response = await supabase.functions.invoke('email-otp', {
         body: {
           action: 'send_otp',
           phone: phone,
-          telegramUsername: telegramUsername
+          email: email
         }
       });
 
@@ -73,13 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error(data.error || 'Failed to send OTP');
       }
 
-      // Show demo message for development
-      if (data.demo_message) {
-        toast.info(data.demo_message);
-      } else {
-        toast.success('OTP sent to your Telegram');
-      }
-
+      toast.success('OTP sent to your email address');
       return { error: null };
     } catch (error: any) {
       const errorMessage = error.message || 'Failed to send OTP';
@@ -90,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyOtp = async (phone: string, otp: string) => {
     try {
-      const response = await supabase.functions.invoke('telegram-bot', {
+      const response = await supabase.functions.invoke('email-otp', {
         body: {
           action: 'verify_otp',
           phone: phone,
@@ -137,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       loading,
       signOut,
-      phoneLogin,
+      emailLogin,
       verifyOtp,
       isAdmin
     }}>
