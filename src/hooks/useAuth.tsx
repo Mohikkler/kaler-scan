@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const emailLogin = async (phone: string, email: string) => {
+    console.log('EmailLogin called with:', phone, email);
     try {
       const response = await supabase.functions.invoke('email-otp', {
         body: {

@@ -18,6 +18,7 @@ export default function Auth() {
   const navigate = useNavigate();
 
   const handleSendOtp = async (e: React.FormEvent) => {
+    console.log('HandleSendOtp called');
     e.preventDefault();
     if (!phone.trim() || !email.trim()) return;
 
