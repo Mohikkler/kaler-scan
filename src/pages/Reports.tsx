@@ -34,21 +34,21 @@ interface Report {
 }
 
 export default function Reports() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, isLoggedIn } = useAuth();
   const [reports, setReports] = useState<Report[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loadingReports, setLoadingReports] = useState(true);
 
-  // Redirect if not authenticated
-  if (!loading && !user) {
-    return <Navigate to="/auth" replace />;
-  }
-
   useEffect(() => {
-    if (user) {
+    if (user || isLoggedIn()) {
       fetchReports();
     }
-  }, [user]);
+  }, [user, isLoggedIn]);
+
+  // Redirect if not authenticated (after all hooks)
+  if (!loading && !user && !isLoggedIn()) {
+    return <Navigate to="/auth" replace />;
+  }
 
   const fetchReports = async () => {
     try {
