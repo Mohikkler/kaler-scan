@@ -184,6 +184,18 @@ serve(async (req) => {
 
       } catch (emailError) {
         console.error('Error sending email:', emailError);
+        
+        // Check if it's a Resend domain verification error
+        if (emailError.statusCode === 403 && emailError.error?.includes('verify a domain')) {
+          return new Response(JSON.stringify({ 
+            success: false, 
+            error: 'Email service is in testing mode. For now, you can only receive OTP emails at mohikkler123@gmail.com. To enable sending to any email, please verify a domain at resend.com/domains.'
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        
         return new Response(JSON.stringify({ 
           success: false, 
           error: 'Failed to send OTP via email. Please check your email address and try again.'
