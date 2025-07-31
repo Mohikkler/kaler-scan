@@ -26,6 +26,7 @@ const Appointments = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const services = [
+    "General Consultation with Dr. Kuldip Kaler",
     "3D/4D Ultrasound Scanning",
     "Color Doppler Testing",
     "Digital X-Ray",
@@ -36,8 +37,7 @@ const Appointments = () => {
     "Level-2 Scan",
     "Ovulation Study",
     "Breast/Testis/Thyroid Scanning",
-    "Computerized ECG",
-    "General Consultation with Dr. Kuldip Kaler"
+    "Computerized ECG"
   ];
 
   const timeSlots = [
@@ -196,8 +196,22 @@ const Appointments = () => {
                         </SelectTrigger>
                         <SelectContent>
                           {services.map((service) => (
-                            <SelectItem key={service} value={service}>
-                              {service}
+                            <SelectItem 
+                              key={service} 
+                              value={service}
+                              className={service === "General Consultation with Dr. Kuldip Kaler" 
+                                ? "bg-gray-50 border-l-4 border-medical-blue font-medium" 
+                                : ""
+                              }
+                            >
+                              <div className="flex items-center justify-between w-full">
+                                <span>{service}</span>
+                                {service === "General Consultation with Dr. Kuldip Kaler" && (
+                                  <span className="text-xs bg-medical-blue text-white px-2 py-1 rounded-full ml-2">
+                                    Recommended
+                                  </span>
+                                )}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
