@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar, FileText, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-medical.jpg";
-import KSCLogo from "./KSCLogo";
 
 const Hero = () => {
   return (
@@ -20,10 +19,7 @@ const Hero = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div className="text-center text-white">
-          {/* Logo and Main Heading */}
-          <div className="flex justify-center mb-6">
-            <KSCLogo size="lg" variant="white" />
-          </div>
+          {/* Main Heading */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
             KALER SCAN CENTRE
           </h1>
