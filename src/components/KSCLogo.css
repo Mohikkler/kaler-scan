@@ -1,0 +1,8 @@
+.ksc-logo {
+  display: inline-block;
+  line-height: 0;
+}
+
+.ksc-logo svg {
+  display: block;
+} 

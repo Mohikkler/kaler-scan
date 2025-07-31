@@ -63,19 +63,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const emailLogin = async (phone: string, email: string) => {
     console.log('EmailLogin called with:', phone, email);
     try {
-      const response = await supabase.functions.invoke('email-otp', {
-        body: {
-          action: 'send_otp',
+      const response = await fetch('http://localhost:4000/api/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           phone: phone,
           email: email
-        }
+        })
       });
 
-      if (response.error) {
-        throw response.error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send OTP');
       }
 
-      const { data } = response;
       if (!data.success) {
         throw new Error(data.error || 'Failed to send OTP');
       }
@@ -91,19 +95,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyOtp = async (phone: string, otp: string) => {
     try {
-      const response = await supabase.functions.invoke('email-otp', {
-        body: {
-          action: 'verify_otp',
+      const response = await fetch('http://localhost:4000/api/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           phone: phone,
           otp: otp
-        }
+        })
       });
 
-      if (response.error) {
-        throw response.error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Invalid OTP');
       }
 
-      const { data } = response;
       if (!data.success) {
         throw new Error(data.error || 'Invalid OTP');
       }

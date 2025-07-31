@@ -1,6 +1,7 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import ServiceCard from "@/components/ServiceCard";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Baby, Stethoscope, Eye, Activity, Scan, Calendar, FileText, ArrowRight, Star, Users, Clock, Award } from "lucide-react";
@@ -149,7 +150,7 @@ const Index = () => {
       </section>
 
       {/* Quick Actions - Simplified */}
-      <section className="py-16 md:py-20 bg-gradient-to-br from-medical-blue-light to-white">
+      <section className="py-16 md:py-20 bg-gradient-to-br from-medical-blue-light/30 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-medical-blue mb-4">
             Get Started Today
@@ -191,6 +192,8 @@ const Index = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>;
 };
 export default Index;

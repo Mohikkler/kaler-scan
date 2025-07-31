@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import doctorImage from "@/assets/doctor-profile.jpg";
+import heroImage from "@/assets/hero-medical.jpg";
 
 const About = () => {
   return (
@@ -20,8 +21,19 @@ const About = () => {
       <Navigation />
       
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16 overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={heroImage} 
+            alt="About Kaler Scan Centre"
+            className="w-full h-full object-cover opacity-40 transform scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-medical-blue/40 via-medical-blue-dark/35 to-medical-blue/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">About Kaler Scan Centre</h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">

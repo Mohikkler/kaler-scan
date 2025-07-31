@@ -13,15 +13,37 @@ import {
   Calendar
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroImage from "@/assets/hero-medical.jpg";
+import GoogleMap from "@/components/GoogleMap";
 
 const Contact = () => {
+  // Kaler Scan Centre coordinates (approximate location in Shahkot, Jalandhar)
+  const locationCoordinates = {
+    lat: 31.0815, // Approximate latitude for Shahkot, Jalandhar
+    lng: 75.3373  // Approximate longitude for Shahkot, Jalandhar
+  };
+
+  // You'll need to replace this with your actual Google Maps API key
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY_HERE';
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16 overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={heroImage} 
+            alt="Contact Us"
+            className="w-full h-full object-cover opacity-40 transform scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-medical-blue/40 via-medical-blue-dark/35 to-medical-blue/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
@@ -98,15 +120,15 @@ const Contact = () => {
               <div className="mt-8 p-6 bg-medical-blue-light rounded-lg">
                 <h3 className="font-bold text-medical-blue mb-3">Quick Actions</h3>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button variant="medical" className="flex-1" asChild>
+                  <Button variant="medical" size="sm" asChild>
                     <Link to="/appointments">
-                      <Calendar className="w-4 h-4" />
+                      <Calendar className="w-4 h-4 mr-2" />
                       Book Appointment
                     </Link>
                   </Button>
-                  <Button variant="medical-outline" className="flex-1" asChild>
+                  <Button variant="outline" size="sm" asChild>
                     <a href="tel:+919779386009">
-                      <Phone className="w-4 h-4" />
+                      <Phone className="w-4 h-4 mr-2" />
                       Call Now
                     </a>
                   </Button>
@@ -116,7 +138,7 @@ const Contact = () => {
 
             {/* Contact Form */}
             <div>
-              <Card className="shadow-lg">
+              <Card className="shadow-lg border-0">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-3 text-medical-blue">
                     <MessageSquare className="w-6 h-6" />
@@ -182,15 +204,27 @@ const Contact = () => {
             </p>
           </div>
           
-          <Card className="overflow-hidden">
-            <div className="bg-gray-200 h-96 flex items-center justify-center">
-              <div className="text-center text-gray-600">
-                <MapPin className="w-16 h-16 mx-auto mb-4" />
-                <p className="text-lg font-medium">Interactive Map</p>
-                <p className="text-sm">Near City Hospital, Salaichan Road</p>
-                <p className="text-sm">Shahkot-144702, Jalandhar, Punjab</p>
+          <Card className="overflow-hidden shadow-lg">
+            {GOOGLE_MAPS_API_KEY !== 'YOUR_API_KEY_HERE' ? (
+              <GoogleMap 
+                apiKey={GOOGLE_MAPS_API_KEY}
+                center={locationCoordinates}
+                zoom={15}
+                className="h-96 w-full"
+              />
+            ) : (
+              <div className="bg-gray-200 h-96 flex items-center justify-center">
+                <div className="text-center text-gray-600">
+                  <MapPin className="w-16 h-16 mx-auto mb-4" />
+                  <p className="text-lg font-medium">Interactive Map</p>
+                  <p className="text-sm">Near City Hospital, Salaichan Road</p>
+                  <p className="text-sm">Shahkot-144702, Jalandhar, Punjab</p>
+                  <p className="text-sm text-medical-blue mt-2">
+                    Add your Google Maps API key to enable interactive map
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </Card>
         </div>
       </section>

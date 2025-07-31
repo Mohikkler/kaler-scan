@@ -1,17 +1,30 @@
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Clock, User, Phone, FileText } from "lucide-react";
+import { 
+  Calendar, 
+  Clock, 
+  User, 
+  Phone, 
+  Mail, 
+  FileText,
+  CheckCircle
+} from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import doctorImage from "@/assets/doctor-profile.jpg";
 
 const Appointments = () => {
+  const navigate = useNavigate();
   const [selectedService, setSelectedService] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const services = [
     "3D/4D Ultrasound Scanning",
@@ -34,13 +47,123 @@ const Appointments = () => {
     "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM"
   ];
 
+  const generateAppointmentId = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `KSC${year}${month}${day}${random}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedService || !selectedDate || !selectedTime) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Get form data
+    const formData = new FormData(e.target as HTMLFormElement);
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+    const phone = formData.get('phone') as string;
+    const email = formData.get('email') as string;
+    const age = formData.get('age') as string;
+    const gender = formData.get('gender') as string;
+    const notes = formData.get('notes') as string;
+
+    if (!firstName || !lastName || !phone) {
+      alert("Please fill in all required fields");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Generate appointment ID
+    const appointmentId = generateAppointmentId();
+    const patientName = `${firstName} ${lastName}`;
+
+    // Create appointment data
+    const appointmentData = {
+      appointmentId,
+      serviceType: selectedService,
+      patientName,
+      phoneNumber: phone,
+      preferredDate: selectedDate,
+      preferredTime: selectedTime,
+      email,
+      age,
+      gender,
+      notes
+    };
+
+    try {
+      // Here you would typically save to Supabase
+      // For now, we'll just simulate the process
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
+
+      // Send appointment confirmation email
+      if (email) {
+        try {
+          const emailResponse = await fetch('http://localhost:4000/api/send-appointment-confirmation', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              appointmentData
+            })
+          });
+
+          const emailResult = await emailResponse.json();
+          
+          if (emailResult.success) {
+            console.log('✅ Appointment confirmation email sent successfully');
+          } else {
+            console.error('❌ Failed to send appointment confirmation email:', emailResult.error);
+          }
+        } catch (emailError) {
+          console.error('❌ Error sending appointment confirmation email:', emailError);
+        }
+      }
+
+      // Store appointment data for confirmation page
+      localStorage.setItem('lastAppointment', JSON.stringify(appointmentData));
+
+      // Navigate to confirmation page
+      navigate('/appointment-confirmation', { 
+        state: { appointmentData } 
+      });
+
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      alert('There was an error booking your appointment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
       {/* Header Section */}
-      <section className="bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-r from-medical-blue to-medical-blue-dark text-white py-16 overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={doctorImage} 
+            alt="Book Your Appointment"
+            className="w-full h-full object-cover opacity-40 transform scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-medical-blue/40 via-medical-blue-dark/35 to-medical-blue/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Book Your Appointment</h1>
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
@@ -64,7 +187,7 @@ const Appointments = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Service Selection */}
                     <div>
                       <Label htmlFor="service" className="text-base font-medium">Select Service</Label>
@@ -86,33 +209,33 @@ const Appointments = () => {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="firstName">First Name *</Label>
-                        <Input id="firstName" placeholder="Enter your first name" required />
+                        <Input id="firstName" name="firstName" placeholder="Enter your first name" required />
                       </div>
                       <div>
                         <Label htmlFor="lastName">Last Name *</Label>
-                        <Input id="lastName" placeholder="Enter your last name" required />
+                        <Input id="lastName" name="lastName" placeholder="Enter your last name" required />
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="phone">Phone Number *</Label>
-                        <Input id="phone" type="tel" placeholder="+91 XXXXX XXXXX" required />
+                        <Input id="phone" name="phone" type="tel" placeholder="+91 XXXXX XXXXX" required />
                       </div>
                       <div>
                         <Label htmlFor="email">Email Address</Label>
-                        <Input id="email" type="email" placeholder="your.email@example.com" />
+                        <Input id="email" name="email" type="email" placeholder="your.email@example.com" />
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-4">
                       <div>
                         <Label htmlFor="age">Age *</Label>
-                        <Input id="age" type="number" placeholder="Age" min="1" max="120" required />
+                        <Input id="age" name="age" type="number" placeholder="Age" min="1" max="120" required />
                       </div>
                       <div>
                         <Label htmlFor="gender">Gender</Label>
-                        <Select>
+                        <Select name="gender">
                           <SelectTrigger>
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
@@ -125,7 +248,7 @@ const Appointments = () => {
                       </div>
                       <div>
                         <Label htmlFor="emergencyContact">Emergency Contact</Label>
-                        <Input id="emergencyContact" type="tel" placeholder="Emergency number" />
+                        <Input id="emergencyContact" name="emergencyContact" type="tel" placeholder="Emergency number" />
                       </div>
                     </div>
 
@@ -164,6 +287,7 @@ const Appointments = () => {
                       <Label htmlFor="notes">Additional Information</Label>
                       <Textarea 
                         id="notes" 
+                        name="notes"
                         placeholder="Any specific requirements, medical history, or notes for the doctor..."
                         className="min-h-[100px]"
                       />
@@ -177,9 +301,24 @@ const Appointments = () => {
                       </p>
                     </div>
 
-                    <Button type="submit" variant="medical" size="lg" className="w-full">
-                      <Calendar className="w-5 h-5" />
-                      Confirm Appointment
+                    <Button 
+                      type="submit" 
+                      variant="medical" 
+                      size="lg" 
+                      className="w-full"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          Booking Appointment...
+                        </>
+                      ) : (
+                        <>
+                          <Calendar className="w-5 h-5" />
+                          Confirm Appointment
+                        </>
+                      )}
                     </Button>
                   </form>
                 </CardContent>
@@ -272,6 +411,8 @@ const Appointments = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

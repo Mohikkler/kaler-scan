@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, FileText, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-medical.jpg";
+import KSCLogo from "./KSCLogo";
 
 const Hero = () => {
   return (
@@ -11,15 +12,18 @@ const Hero = () => {
         <img 
           src={heroImage} 
           alt="Kaler Scan Centre - Advanced Diagnostic Center"
-          className="w-full h-full object-cover opacity-20 transform scale-105"
+          className="w-full h-full object-cover opacity-40 transform scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/90 via-medical-blue-dark/85 to-medical-blue/95"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-medical-blue/40 via-medical-blue-dark/35 to-medical-blue/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div className="text-center text-white">
-          {/* Main Heading */}
+          {/* Logo and Main Heading */}
+          <div className="flex justify-center mb-6">
+            <KSCLogo size="lg" variant="white" />
+          </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
             KALER SCAN CENTRE
           </h1>
