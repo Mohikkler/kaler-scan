@@ -40,10 +40,8 @@ export default function Reports() {
   const [loadingReports, setLoadingReports] = useState(true);
 
   useEffect(() => {
-    if (user || isLoggedIn()) {
-      fetchReports();
-    }
-  }, [user, isLoggedIn]);
+    fetchReports();
+  }, [fetchReports]);
 
   // Redirect if not authenticated (after all hooks)
   if (!loading && !user && !isLoggedIn()) {
@@ -98,8 +96,14 @@ export default function Reports() {
     report.report_id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const downloadReport = async (report: Report) => {
-    if (!report.file_url) {
+  const handleDownload = async (report: {
+    id: string;
+    patientName: string;
+    serviceType: string;
+    reportDate: string;
+    downloadUrl: string;
+  }) => {
+    if (!report.downloadUrl) {
       toast.error('Report file not available');
       return;
     }
@@ -107,7 +111,7 @@ export default function Reports() {
     try {
       // In a real implementation, this would download from Supabase Storage
       // For now, show a success message
-      toast.success(`Downloading ${report.file_name || report.report_id}`);
+      toast.success(`Downloading ${report.serviceType}`);
     } catch (error) {
       toast.error('Failed to download report');
     }
@@ -216,7 +220,7 @@ export default function Reports() {
                                 <Button 
                                   variant="medical" 
                                   size="sm"
-                                  onClick={() => downloadReport(report)}
+                                  onClick={() => handleDownload(report)}
                                 >
                                   <Download className="w-4 h-4" />
                                   Download

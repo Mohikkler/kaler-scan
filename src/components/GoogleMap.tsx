@@ -32,8 +32,11 @@ const GoogleMap = ({ apiKey, center, zoom = 15, className = "h-96 w-full" }: Goo
           ]
         });
 
+        // Create Google Maps URL for direct navigation
+        const googleMapsUrl = `https://www.google.com/maps?q=${center.lat},${center.lng}&z=${zoom}`;
+
         // Add marker for Kaler Scan Centre
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           position: center,
           map: map,
           title: 'Kaler Scan Centre',
@@ -49,24 +52,52 @@ const GoogleMap = ({ apiKey, center, zoom = 15, className = "h-96 w-full" }: Goo
           }
         });
 
-        // Add info window
+        // Add info window with clickable link
         const infoWindow = new google.maps.InfoWindow({
           content: `
-            <div style="padding: 10px; max-width: 200px;">
-              <h3 style="margin: 0 0 5px 0; color: #173781; font-weight: bold;">Kaler Scan Centre</h3>
+            <div style="padding: 10px; max-width: 250px;">
+              <h3 style="margin: 0 0 8px 0; color: #173781; font-weight: bold;">Kaler Scan Centre</h3>
               <p style="margin: 0 0 5px 0; font-size: 14px;">Near City Hospital</p>
               <p style="margin: 0 0 5px 0; font-size: 14px;">Salaichan Road, Shahkot-144702</p>
-              <p style="margin: 0; font-size: 14px;">Jalandhar, Punjab, India</p>
+              <p style="margin: 0 0 10px 0; font-size: 14px;">Jalandhar, Punjab, India</p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <a href="${googleMapsUrl}" target="_blank" style="
+                  display: inline-block;
+                  background: #173781;
+                  color: white;
+                  padding: 8px 12px;
+                  text-decoration: none;
+                  border-radius: 4px;
+                  font-size: 13px;
+                  font-weight: 500;
+                  transition: background 0.2s;
+                " onmouseover="this.style.background='#0f2a5a'" onmouseout="this.style.background='#173781'">
+                  📍 Open in Google Maps
+                </a>
+                <span style="
+                  display: inline-block;
+                  background: #f3f4f6;
+                  color: #6b7280;
+                  padding: 8px 12px;
+                  border-radius: 4px;
+                  font-size: 12px;
+                  border: 1px solid #d1d5db;
+                ">
+                  💡 Double-click marker for direct navigation
+                </span>
+              </div>
             </div>
           `
         });
 
         // Show info window on marker click
-        map.addListener('click', () => {
-          infoWindow.open(map, new google.maps.Marker({
-            position: center,
-            map: map
-          }));
+        marker.addListener('click', () => {
+          infoWindow.open(map, marker);
+        });
+
+        // Open Google Maps directly on marker double-click
+        marker.addListener('dblclick', () => {
+          window.open(googleMapsUrl, '_blank');
         });
       }
     }).catch((error) => {

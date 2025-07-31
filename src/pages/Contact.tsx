@@ -23,8 +23,8 @@ const Contact = () => {
     lng: 75.3373  // Approximate longitude for Shahkot, Jalandhar
   };
 
-  // You'll need to replace this with your actual Google Maps API key
-  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY_HERE';
+  // Google Maps API key from environment variable
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -205,26 +205,12 @@ const Contact = () => {
           </div>
           
           <Card className="overflow-hidden shadow-lg">
-            {GOOGLE_MAPS_API_KEY !== 'YOUR_API_KEY_HERE' ? (
-              <GoogleMap 
-                apiKey={GOOGLE_MAPS_API_KEY}
-                center={locationCoordinates}
-                zoom={15}
-                className="h-96 w-full"
-              />
-            ) : (
-              <div className="bg-gray-200 h-96 flex items-center justify-center">
-                <div className="text-center text-gray-600">
-                  <MapPin className="w-16 h-16 mx-auto mb-4" />
-                  <p className="text-lg font-medium">Interactive Map</p>
-                  <p className="text-sm">Near City Hospital, Salaichan Road</p>
-                  <p className="text-sm">Shahkot-144702, Jalandhar, Punjab</p>
-                  <p className="text-sm text-medical-blue mt-2">
-                    Add your Google Maps API key to enable interactive map
-                  </p>
-                </div>
-              </div>
-            )}
+            <GoogleMap 
+              apiKey={GOOGLE_MAPS_API_KEY}
+              center={locationCoordinates}
+              zoom={15}
+              className="h-96 w-full"
+            />
           </Card>
         </div>
       </section>

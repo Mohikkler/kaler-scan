@@ -172,7 +172,18 @@ export const verifyEmailConnection = async (): Promise<boolean> => {
 };
 
 // Email template for appointment confirmation
-const createAppointmentConfirmationTemplate = (appointmentData: any): string => {
+const createAppointmentConfirmationTemplate = (appointmentData: {
+  appointmentId: string;
+  patientName: string;
+  phoneNumber: string;
+  email: string;
+  serviceType: string;
+  preferredDate: string;
+  preferredTime: string;
+  age?: string;
+  gender?: string;
+  notes?: string;
+}): string => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 
@@ -342,7 +353,18 @@ const createAppointmentConfirmationTemplate = (appointmentData: any): string => 
 };
 
 // Function to send appointment confirmation email
-export const sendAppointmentConfirmationEmail = async (appointmentData: any): Promise<boolean> => {
+export const sendAppointmentConfirmationEmail = async (appointmentData: {
+  appointmentId: string;
+  patientName: string;
+  phoneNumber: string;
+  email: string;
+  serviceType: string;
+  preferredDate: string;
+  preferredTime: string;
+  age?: string;
+  gender?: string;
+  notes?: string;
+}): Promise<boolean> => {
   try {
     console.log(`Attempting to send appointment confirmation email to: ${appointmentData.email}`);
     
@@ -364,11 +386,11 @@ export const sendAppointmentConfirmationEmail = async (appointmentData: any): Pr
     console.log('Message ID:', info.messageId);
     console.log('Response:', info.response);
     return true;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ Error sending appointment confirmation email:');
     console.error('Error details:', error);
-    console.error('Error message:', error.message);
-    console.error('Error code:', error.code);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error code:', error instanceof Error && 'code' in error ? (error as any).code : 'Unknown');
     return false;
   }
 };

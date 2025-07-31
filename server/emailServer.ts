@@ -243,11 +243,11 @@ app.post('/api/send-appointment-confirmation', async (req, res) => {
         error: 'Failed to send appointment confirmation email' 
       });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in appointment confirmation endpoint:', error);
     res.status(500).json({ 
       success: false, 
-      error: error.message || 'Internal server error' 
+      error: error instanceof Error ? error.message : 'Internal server error' 
     });
   }
 });

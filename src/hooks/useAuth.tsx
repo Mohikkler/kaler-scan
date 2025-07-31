@@ -86,8 +86,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       toast.success('OTP sent to your email address');
       return { error: null };
-    } catch (error: any) {
-      const errorMessage = error.message || 'Failed to send OTP';
+    } catch (error: unknown) {
+      console.error('Error during OTP sending:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send OTP';
       toast.error(errorMessage);
       return { error: errorMessage };
     }
@@ -121,8 +122,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       toast.success('Successfully logged in');
       return { error: null };
-    } catch (error: any) {
-      const errorMessage = error.message || 'Invalid OTP';
+    } catch (error: unknown) {
+      console.error('Error during OTP verification:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Invalid OTP';
       toast.error(errorMessage);
       return { error: errorMessage };
     }
@@ -135,8 +137,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       localStorage.removeItem('current_phone');
       toast.success('Logged out successfully');
-    } catch (error: any) {
-      toast.error('Error logging out');
+    } catch (error: unknown) {
+      console.error('Error during logout:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to logout';
+      toast.error(errorMessage);
     }
   };
 
