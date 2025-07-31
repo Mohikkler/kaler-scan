@@ -12,7 +12,6 @@ import {
   User, 
   Phone, 
   Mail, 
-  FileText,
   CheckCircle
 } from "lucide-react";
 import { useState } from "react";
@@ -391,22 +390,7 @@ const Appointments = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-medical-blue">
-                    <FileText className="w-5 h-5" />
-                    <span>Pricing Information</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Competitive pricing for all diagnostic services. Contact us for detailed pricing.
-                  </p>
-                  <p className="text-lg font-medium text-medical-blue">
-                    Prices available on inquiry basis
-                  </p>
-                </CardContent>
-              </Card>
+
             </div>
           </div>
         </div>

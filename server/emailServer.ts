@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
-import { generateOTP, sendOTPEmail, sendAppointmentConfirmationEmail, verifyEmailConnection } from '../src/services/emailService';
+import { generateOTP, sendOTPEmail, sendAppointmentConfirmationEmail, sendContactMessageEmail, verifyEmailConnection } from '../src/services/emailService';
 
 dotenv.config();
 
@@ -245,6 +245,61 @@ app.post('/api/send-appointment-confirmation', async (req, res) => {
     }
   } catch (error: unknown) {
     console.error('Error in appointment confirmation endpoint:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Internal server error' 
+    });
+  }
+});
+
+// Send contact message endpoint
+app.post('/api/send-contact-message', async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, subject, message, toEmail } = req.body;
+
+    if (!firstName || !lastName || !email || !message) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'First name, last name, email, and message are required' 
+      });
+    }
+
+    console.log('Received contact message request:', { firstName, lastName, email, subject });
+
+    // Create email content
+    const emailSubject = subject || `New Contact Message from ${firstName} ${lastName}`;
+    const emailContent = `
+      <h2>New Contact Message from Kaler Scan Centre Website</h2>
+      <p><strong>From:</strong> ${firstName} ${lastName}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+      ${subject ? `<p><strong>Subject:</strong> ${subject}</p>` : ''}
+      <p><strong>Message:</strong></p>
+      <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
+        ${message.replace(/\n/g, '<br>')}
+      </div>
+      <hr>
+      <p style="color: #666; font-size: 12px;">
+        This message was sent from the contact form on the Kaler Scan Centre website.
+      </p>
+    `;
+
+    // Send email using the existing email service
+    const emailSent = await sendContactMessageEmail(toEmail || 'mohikkler123@gmail.com', emailSubject, emailContent, email);
+
+    if (emailSent) {
+      res.json({ 
+        success: true, 
+        message: 'Contact message sent successfully' 
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: 'Failed to send contact message' 
+      });
+    }
+  } catch (error: unknown) {
+    console.error('Error in send-contact-message endpoint:', error);
     res.status(500).json({ 
       success: false, 
       error: error instanceof Error ? error.message : 'Internal server error' 

@@ -353,6 +353,35 @@ const createAppointmentConfirmationTemplate = (appointmentData: {
 };
 
 // Function to send appointment confirmation email
+// Send contact message email
+export const sendContactMessageEmail = async (toEmail: string, subject: string, htmlContent: string, fromEmail: string): Promise<boolean> => {
+  try {
+    console.log('📧 Sending contact message email...');
+    console.log('To:', toEmail);
+    console.log('Subject:', subject);
+    console.log('From:', fromEmail);
+
+    const mailOptions = {
+      from: `"Kaler Scan Centre Website" <mohikkler123@gmail.com>`,
+      to: toEmail,
+      subject: subject,
+      html: htmlContent,
+      replyTo: fromEmail // Set reply-to as the sender's email
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Contact message email sent successfully');
+    console.log('Message ID:', info.messageId);
+    return true;
+  } catch (error: unknown) {
+    console.error('❌ Error sending contact message email:');
+    console.error('Error details:', error);
+    console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Error code:', error instanceof Error && 'code' in error ? (error as any).code : 'Unknown');
+    return false;
+  }
+};
+
 export const sendAppointmentConfirmationEmail = async (appointmentData: {
   appointmentId: string;
   patientName: string;

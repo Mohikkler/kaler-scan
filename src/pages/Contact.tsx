@@ -9,14 +9,26 @@ import {
   Phone, 
   Clock, 
   Mail, 
-  MessageSquare,
-  Calendar
+  MessageSquare
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "sonner";
 import heroImage from "@/assets/hero-medical.jpg";
 import GoogleMap from "@/components/GoogleMap";
+import Footer from "@/components/Footer";
 
 const Contact = () => {
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Kaler Scan Centre coordinates (approximate location in Shahkot, Jalandhar)
   const locationCoordinates = {
     lat: 31.0815, // Approximate latitude for Shahkot, Jalandhar
@@ -25,6 +37,63 @@ const Contact = () => {
 
   // Google Maps API key from environment variable
   const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+  // Handle form input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('http://localhost:4000/api/send-contact-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          toEmail: 'mohikkler123@gmail.com'
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Message sent successfully! We'll get back to you soon.");
+        // Reset form
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        toast.error(result.error || "Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error('Error sending contact message:', error);
+      toast.error("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -117,23 +186,7 @@ const Contact = () => {
                 </Card>
               </div>
 
-              <div className="mt-8 p-6 bg-medical-blue-light rounded-lg">
-                <h3 className="font-bold text-medical-blue mb-3">Quick Actions</h3>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button variant="medical" size="sm" asChild>
-                    <Link to="/appointments">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Book Appointment
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="sm" asChild>
-                    <a href="tel:+919779386009">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Call Now
-                    </a>
-                  </Button>
-                </div>
-              </div>
+
             </div>
 
             {/* Contact Form */}
@@ -146,45 +199,98 @@ const Contact = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" placeholder="Enter your first name" />
+                        <Label htmlFor="firstName">First Name *</Label>
+                        <Input 
+                          id="firstName" 
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          placeholder="Enter your first name" 
+                          required
+                        />
                       </div>
                       <div>
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" placeholder="Enter your last name" />
+                        <Label htmlFor="lastName">Last Name *</Label>
+                        <Input 
+                          id="lastName" 
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          placeholder="Enter your last name" 
+                          required
+                        />
                       </div>
                     </div>
                     
                     <div>
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input id="email" type="email" placeholder="your.email@example.com" />
+                      <Label htmlFor="email">Email Address *</Label>
+                      <Input 
+                        id="email" 
+                        name="email"
+                        type="email" 
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="your.email@example.com" 
+                        required
+                      />
                     </div>
                     
                     <div>
                       <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" placeholder="+91 XXXXX XXXXX" />
+                      <Input 
+                        id="phone" 
+                        name="phone"
+                        type="tel" 
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="+91 XXXXX XXXXX" 
+                      />
                     </div>
                     
                     <div>
                       <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" placeholder="How can we help you?" />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="message">Message</Label>
-                      <Textarea 
-                        id="message" 
-                        placeholder="Please describe your inquiry or question..."
-                        className="min-h-[120px]"
+                      <Input 
+                        id="subject" 
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                        placeholder="How can we help you?" 
                       />
                     </div>
                     
-                    <Button type="submit" variant="medical" className="w-full">
-                      <Mail className="w-4 h-4" />
-                      Send Message
+                    <div>
+                      <Label htmlFor="message">Message *</Label>
+                      <Textarea 
+                        id="message" 
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        placeholder="Please describe your inquiry or question..."
+                        className="min-h-[120px]"
+                        required
+                      />
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      variant="medical" 
+                      className="w-full"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Sending Message...
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="w-4 h-4" />
+                          Send Message
+                        </>
+                      )}
                     </Button>
                   </form>
                 </CardContent>
@@ -215,23 +321,8 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Emergency Contact */}
-      <section className="py-12 bg-medical-blue text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Emergency Support</h2>
-          <p className="text-blue-100 mb-6">
-            For urgent medical queries or emergency appointments, contact us immediately
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-medical-blue" asChild>
-              <a href="tel:+919779386009">
-                <Phone className="w-4 h-4" />
-                Emergency: +91 97793-86009
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
